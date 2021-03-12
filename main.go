@@ -34,8 +34,6 @@ func startLoggingJSON() {
 		if err != nil {
 			log.Fatalln("Fatal Error:", err)
 		}
-
-		fmt.Println(string(item))
 		log.Println(string(item))
 
 		counter++
