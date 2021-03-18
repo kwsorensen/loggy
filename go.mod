@@ -1,3 +1,3 @@
-module logger
+module loggy
 
 go 1.16
