@@ -2,10 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
-	"net/http"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -14,16 +13,17 @@ type jsonLog struct {
 	Message string `json:"message"`
 }
 
-func startLogging() {
+func startLogging(wg *sync.WaitGroup) {
 	counter := 0
 	for {
 		time.Sleep(time.Second * 5)
 		log.Println("Logging Line: ", counter, "Line")
 		counter++
 	}
+	wg.Done()
 }
 
-func startLoggingJSON() {
+func startLoggingJSON(wg *sync.WaitGroup) {
 	counter := 0
 	logObject := jsonLog{}
 	logObject.Message = "Hello string"
@@ -38,16 +38,20 @@ func startLoggingJSON() {
 
 		counter++
 	}
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(w, "Hi there, I love %s!", r.URL.Path[1:])
+	wg.Done()
 }
 
 func main() {
+	// get file path as first CLI argument
+	logpath := "./logs.txt"
+	if len(os.Args) > 1 {
+		logpath = os.Args[1]
+	}
+
+	log.Println("Logging to:", logpath)
+
 	// If the file doesn't exist, create it or append to the file
-	os.MkdirAll("/mnt/c/logs/app2/logs", 0666)
-	file, err := os.OpenFile("/mnt/c/json/mixed-objects.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	file, err := os.OpenFile(logpath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,9 +59,10 @@ func main() {
 	log.SetOutput(file)
 	log.Println("Log Generator Starting!")
 
-	go startLogging()
-	go startLoggingJSON()
-
-	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	// set up wait group so app will block for goroutines
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go startLogging(&wg)
+	go startLoggingJSON(&wg)
+	wg.Wait()
 }
