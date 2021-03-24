@@ -51,12 +51,13 @@ func main() {
 	log.Println("Logging to:", logpath)
 
 	// If the file doesn't exist, create it or append to the file
-	file, err := os.OpenFile(logpath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	/*file, err := os.OpenFile(logpath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
+	*/
 	log.SetFlags(0)
-	log.SetOutput(file)
+	// log.SetOutput(file)
 	log.Println("Log Generator Starting!")
 
 	// set up wait group so app will block for goroutines
