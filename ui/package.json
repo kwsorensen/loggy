@@ -1,6 +1,7 @@
 {
   "name": "loggy",
   "version": "0.1.0",
+  "homepage": "docs",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.10",
@@ -14,6 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build-docs": "react-scripts build -h ",
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject"
   },
