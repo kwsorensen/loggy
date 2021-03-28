@@ -21,7 +21,7 @@ type LogType struct {
 func CreateJSONLog() {
 	logCount := 0
 	logObject := JsonLog{}
-	logObject.Message = "Hello string"
+	logObject.Message = "Another New Log"
 	for {
 		logObject.Count = int32(logCount)
 		time.Sleep(time.Second * 5)
