@@ -6,8 +6,6 @@ import (
 	"log"
 	loggio "loggio"
 	"net/http"
-	"sync"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -17,15 +15,6 @@ var Logs []Log
 type Log struct {
 	Type string    `json:"Type"`
 	Id   uuid.UUID `json:"id"`
-}
-
-func startLogging(wg *sync.WaitGroup) {
-	counter := 0
-	for {
-		time.Sleep(time.Second * 5)
-		log.Println("Logging Line: ", counter, "Line")
-		counter++
-	}
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
