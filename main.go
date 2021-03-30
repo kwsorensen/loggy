@@ -68,6 +68,7 @@ func main() {
 	http.HandleFunc("/getLogs", returnLoggers)
 
 	log.Println("Log Generator Starting!")
+	go loggio.CreateJSONLog()
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {

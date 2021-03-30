@@ -8,8 +8,9 @@ import (
 )
 
 type JsonLog struct {
-	Count   int32  `json:"count"`
-	Message string `json:"message"`
+	Count    int32  `json:"count"`
+	LogLevel string `json:"log_level"`
+	Message  string `json:"message"`
 }
 
 type LogType struct {
@@ -21,7 +22,8 @@ type LogType struct {
 func CreateJSONLog() {
 	logCount := 0
 	logObject := JsonLog{}
-	logObject.Message = "Another New Log"
+	logObject.LogLevel = "Information"
+	logObject.Message = "Loggy is the greatest Logger out there."
 	for {
 		logObject.Count = int32(logCount)
 		time.Sleep(time.Second * 5)
