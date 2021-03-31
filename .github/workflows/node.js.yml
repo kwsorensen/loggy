@@ -28,7 +28,7 @@ jobs:
     - run: cd ui && npm install
     - run: cd ui && npm run test
   build-images:
-    if: contains( github.ref, 'master')
+    if: contains( github.ref, 'main')
     name: Pushing latest images to dockerhub
     runs-on: ubuntu-latest
     steps:
