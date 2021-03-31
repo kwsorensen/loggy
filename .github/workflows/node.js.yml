@@ -27,3 +27,18 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: cd ui && npm install
     - run: cd ui && npm run test
+  build-images:
+    if: contains( github.ref, 'master')
+    name: Pushing latest images to dockerhub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERUSER }}
+          password: ${{ secrets.DOCKERPASSWORD }}
+          repository: kwsorensen/loggy
+          push: true
+          tags: latest
