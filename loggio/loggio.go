@@ -19,14 +19,14 @@ type LogType struct {
 	Message  string `json:"message"`
 }
 
-func CreateJSONLog(interval int) {
+func CreateJSONLog() {
 	logCount := 0
 	logObject := JsonLog{}
 	logObject.LogLevel = "Information"
 	logObject.Message = "Loggy is the greatest Logger out there."
 	for {
 		logObject.Count = int32(logCount)
-		time.Sleep(time.Millisecond * time.Duration(interval))
+		time.Sleep(time.Second * 5)
 		item, err := json.Marshal(logObject)
 		if err != nil {
 			log.Fatalln("Fatal Error:", err)
@@ -37,11 +37,11 @@ func CreateJSONLog(interval int) {
 	}
 }
 
-func CreateDefaultLog(interval int) {
+func CreateDefaultLog() {
 	logCount := 0
 
 	for {
-		time.Sleep(time.Millisecond * time.Duration(interval))
+		time.Sleep(time.Second * 5)
 		fmt.Println("New Log Number: ", logCount)
 		logCount++
 	}

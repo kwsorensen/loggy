@@ -6,44 +6,15 @@ import (
 	"log"
 	loggio "loggio"
 	"net/http"
-	"os"
-	"strconv"
 
 	"github.com/google/uuid"
 )
 
 var Logs []Log
-var Config InitConfig
 
 type Log struct {
 	Type string    `json:"Type"`
 	Id   uuid.UUID `json:"id"`
-}
-
-type InitConfig struct {
-	JSON_INTERVAL_MS, DEFAULT_INTERVAL_MS int
-}
-
-func startupConfig() {
-	fmt.Println("Starting Configuration")
-	ENV_JSON_INTERVAL_MS, exists := os.LookupEnv("JSON_INTERVAL_MS")
-	print(exists)
-	if value, err := strconv.Atoi(ENV_JSON_INTERVAL_MS); err == nil {
-		Config.JSON_INTERVAL_MS = value
-	} else {
-		Config.JSON_INTERVAL_MS = 1000
-	}
-
-	ENV_DEFAULT_INTERVAL_MS, exists := os.LookupEnv("DEFAULT_INTERVAL_MS")
-	print(exists)
-	if value, err := strconv.Atoi(ENV_DEFAULT_INTERVAL_MS); err == nil {
-		Config.DEFAULT_INTERVAL_MS = value
-	} else {
-		Config.DEFAULT_INTERVAL_MS = 1000
-	}
-
-	go loggio.CreateDefaultLog(Config.DEFAULT_INTERVAL_MS)
-	go loggio.CreateJSONLog(Config.JSON_INTERVAL_MS)
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +49,7 @@ func defaultLogHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, "Default Log Handler Event started")
 	log.Println("New Default Log Handler Starting...")
-	go loggio.CreateDefaultLog(1000)
+	go loggio.CreateDefaultLog()
 }
 
 func jsonLogHandler(w http.ResponseWriter, r *http.Request) {
@@ -86,18 +57,18 @@ func jsonLogHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, "JSON Log Handler Event started")
 	log.Println("New JSON Log Handler Starting...")
-	go loggio.CreateJSONLog(1000)
+	go loggio.CreateJSONLog()
 }
 
 func main() {
-	startupConfig()
 
 	http.HandleFunc("/", defaultHandler)
 	http.HandleFunc("/createDefaultLog", defaultLogHandler)
 	http.HandleFunc("/createJSONLog", jsonLogHandler)
 	http.HandleFunc("/getLogs", returnLoggers)
 
-	log.Println("Log Generator API Starting!")
+	log.Println("Log Generator Starting!")
+	go loggio.CreateJSONLog()
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
