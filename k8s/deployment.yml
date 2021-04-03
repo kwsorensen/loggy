@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: loggy
+    json-explode: "true"
+  name: loggy
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: loggy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: loggy
+    spec:
+      containers:
+      - image: kwsorensen/loggy:latest
+        name: loggy
+        env:
+        - name: JSON_INTERVAL_MS
+          value: "1000"
+        - name: DEFAULT_INTERVAL_MS
+          value: "1000"
+        resources: {}
+
+status: {}
